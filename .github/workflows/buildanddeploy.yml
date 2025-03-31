@@ -1,0 +1,82 @@
+name: 'Build and Deploy Image'
+on:
+  push:
+    branches:
+      - main
+
+env:
+    BUILD_IMG: usva1nprdidpacr01.azurecr.io/ncaa:${{ github.ref_name }}
+    
+jobs:
+  build-image:    
+    runs-on: ubuntu-latest
+    permissions: write-all
+    environment: build
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Login to registry
+        uses: docker/login-action@v3
+        with:
+          registry: usva1nprdidpacr01.azurecr.io
+          username: ${{ vars.REGISTRY_USERNAME }}
+          password: "${{ secrets.REGISTRY_PASSWORD }}"
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: build and push to nexus
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{env.BUILD_IMG}}
+
+  deploy-image-test:
+    needs: build-image
+    runs-on: 
+      group: nomad
+    permissions: read-all
+    environment: test
+    env:
+      NOMAD_ADDR: ${{ vars.NOMAD_ADDR }}
+      NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+      NOMAD_SKIP_VERIFY: true
+      NOMAD_VAR_NOMAD_DATACENTER: "hqtest"
+      NOMAD_VAR_NEXUS_USERNAME: ${{ vars.REGISTRY_USERNAME }}
+      NOMAD_VAR_NEXUS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      NOMAD_VAR_FLASK_ENV: "test"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Validate Jobspec
+        run: nomad validate jobspecs/templateapp.hcl
+      - name: Run Nomad Plan on JobSpec
+        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/templateapp.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
+        id: nomad_plan
+      - name: Run Nomad Apply on JobSpec if there are changes
+        run: ${{ steps.nomad_plan.outputs.APPLY_STRING }}
+
+  deploy-image-prod:
+    needs: deploy-image-test
+    runs-on: 
+      group: nomad
+    permissions: read-all
+    environment: production
+    env:
+      NOMAD_ADDR: ${{ vars.NOMAD_ADDR }}
+      NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
+      NOMAD_SKIP_VERIFY: true
+      NOMAD_VAR_NOMAD_DATACENTER: "hqprod"
+      NOMAD_VAR_NEXUS_USERNAME: ${{ vars.REGISTRY_USERNAME }}
+      NOMAD_VAR_NEXUS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      NOMAD_VAR_FLASK_ENV: "production"
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Validate Jobspec
+        run: nomad validate jobspecs/templateapp.hcl
+      - name: Run Nomad Plan on JobSpec
+        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/templateapp.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
+        id: nomad_plan
+      - name: Run Nomad Apply on JobSpec if there are changes
+        run: ${{ steps.nomad_plan.outputs.APPLY_STRING }}
