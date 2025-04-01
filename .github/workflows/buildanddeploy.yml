@@ -28,11 +28,14 @@ jobs:
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: build and push to nexus
+      - name: build and push to container registry
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{env.BUILD_IMG}}
+          tags: |
+            ${{env.BUILD_IMG}}
+            usva1nprdidpacr01.azurecr.io/${{ vars.APP_NAME }}:latest
+            
 
   deploy-image-test:
     needs: build-image
