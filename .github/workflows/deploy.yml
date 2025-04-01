@@ -30,9 +30,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Validate Jobspec
-        run: nomad validate jobspecs/ncaa.hcl
+        run: nomad validate jobspecs/templateapp.hcl
       - name: Run Nomad Plan on JobSpec
-        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/ncaa.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
+        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/templateapp.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
         id: nomad_plan
       - name: Run Nomad Apply on JobSpec if there are changes
         run: ${{ steps.nomad_plan.outputs.APPLY_STRING }}
@@ -61,9 +61,9 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Validate Jobspec
-        run: nomad validate jobspecs/ncaa.hcl
+        run: nomad validate jobspecs/templateapp.hcl
       - name: Run Nomad Plan on JobSpec
-        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/ncaa.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
+        run: echo "APPLY_STRING=$(nomad job plan -no-color jobspecs/templateapp.hcl | tee /dev/stderr | grep '^nomad')" >> $GITHUB_OUTPUT
         id: nomad_plan
       - name: Run Nomad Apply on JobSpec if there are changes
         run: ${{ steps.nomad_plan.outputs.APPLY_STRING }}
