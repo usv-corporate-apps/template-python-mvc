@@ -6,10 +6,9 @@ on:
     paths-ignore:
       - 'jobspecs/*'
       - 'Dockerfile'
-      - '.github/*'
 
 env:
-    BUILD_IMG: usva1nprdidpacr01.azurecr.io/ncaa:${{ github.ref_name }}
+    BUILD_IMG: usva1nprdidpacr01.azurecr.io/template-python-mvc:${{ github.ref_name }}
     
 jobs:
   build-image:    
