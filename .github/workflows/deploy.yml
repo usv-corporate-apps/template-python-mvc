@@ -1,8 +1,14 @@
-name: 'Build and Deploy Image'
+name: 'Deploy Image'
 on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'app/*'
+      - 'Dockerfile'
+      - 'config.py'
+      - '.github/*'
+      - 'requirements.txt'
 
 env:
     BUILD_IMG: usva1nprdidpacr01.azurecr.io/${{ vars.APP_NAME }}:${{ github.ref_name }}
