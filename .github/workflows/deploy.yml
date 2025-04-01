@@ -22,9 +22,11 @@ jobs:
     env:
       NOMAD_ADDR: ${{ vars.NOMAD_ADDR }}
       NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-      NOMAD_VAR_REGISTRY: usva1nprdidpacr01.azurecr.io
       NOMAD_SKIP_VERIFY: true
       NOMAD_VAR_NOMAD_DATACENTER: "hqtest"
+      NOMAD_VAR_REGISTRY_SERVER: "usva1nprdidpacr01.azurecr.io"
+      NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.REGISTRY_USERNAME }}
+      NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       NOMAD_VAR_FLASK_ENV: "test"
     steps:
       - name: Checkout repo
@@ -48,10 +50,10 @@ jobs:
       NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
       NOMAD_SKIP_VERIFY: true
       NOMAD_VAR_NOMAD_DATACENTER: "hqtest"
-      NOMAD_VAR_NEXUS_USERNAME: ${{ vars.NEXUS_USERNAME }}
-      NOMAD_VAR_NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-      NOMAD_VAR_FLASK_ENV: "test"
-      NOMAD_VAR_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      NOMAD_VAR_REGISTRY_SERVER: "usva1prdidpacr01.azurecr.io"
+      NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.NEXUS_USERNAME }}
+      NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      NOMAD_VAR_FLASK_ENV: "production"
     # container:
     #   image: nexusdocker.testapps.usoil.local/repository/usv-docker/usv-corporate-apps/cicd:main
     #   credentials:

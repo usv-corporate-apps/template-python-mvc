@@ -45,8 +45,9 @@ jobs:
       NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
       NOMAD_SKIP_VERIFY: true
       NOMAD_VAR_NOMAD_DATACENTER: "hqtest"
-      NOMAD_VAR_NEXUS_USERNAME: ${{ vars.REGISTRY_USERNAME }}
-      NOMAD_VAR_NEXUS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      NOMAD_VAR_REGISTRY_SERVER: "usva1nprdidpacr01.azurecr.io"
+      NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.REGISTRY_USERNAME }}
+      NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       NOMAD_VAR_FLASK_ENV: "test"
     steps:
       - name: Checkout repo
@@ -70,8 +71,9 @@ jobs:
       NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
       NOMAD_SKIP_VERIFY: true
       NOMAD_VAR_NOMAD_DATACENTER: "hqprod"
-      NOMAD_VAR_NEXUS_USERNAME: ${{ vars.REGISTRY_USERNAME }}
-      NOMAD_VAR_NEXUS_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      NOMAD_VAR_REGISTRY_SERVER: "usva1prdidpacr01.azurecr.io"
+      NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.REGISTRY_USERNAME }}
+      NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       NOMAD_VAR_FLASK_ENV: "production"
     steps:
       - name: Checkout repo
