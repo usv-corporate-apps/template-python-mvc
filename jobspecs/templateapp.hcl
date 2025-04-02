@@ -19,24 +19,30 @@ variable "REGISTRY_PASSWORD" {
   type        = string
 }
 
-job "template-python-mvc" {
+variable "APP_NAME" {
+  description = "The name of the application"
+  type        = string
+}
+
+job "python-mvc-job" {
+  name = "${var.APP_NAME}"
   datacenters = [var.NOMAD_DATACENTER]
   type        = "service"
 
-  group "template-python-mvc" {
+  group "main" {
     count = 1
 
     network {
-      port "template-python-mvc" {
+      port "http" {
         to = 5000
       }
     }
 
-    task "template-python-mvc" {
+    task "main" {
       driver = "docker"
 
       config {
-        image = "${var.REGISTRY_SERVER}/template-python-mvc:latest"
+        image = "${var.REGISTRY_SERVER}/${var.APP_NAME}:latest"
 
         auth {
           username = "${var.REGISTRY_USERNAME}"
@@ -49,12 +55,12 @@ job "template-python-mvc" {
       }
 
       service {
-        name = "template-python-mvc"
+        name = "${var.APP_NAME}"
         tags = ["logging"]
-        port = "template-python-mvc"
+        port = "http"
 
         check {
-          name     = "template-python-mvc"
+          name     = "${var.APP_NAME}"
           type     = "http"
           path     = "/"
           interval = "10s"
