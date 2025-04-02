@@ -62,7 +62,7 @@ job "python-mvc-job" {
         check {
           name     = "${var.APP_NAME}"
           type     = "http"
-          path     = "/"
+          path     = "/health"
           interval = "10s"
           timeout  = "2s"
         }
