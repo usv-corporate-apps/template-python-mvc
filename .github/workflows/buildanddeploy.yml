@@ -52,6 +52,7 @@ jobs:
       NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.REGISTRY_USERNAME }}
       NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       NOMAD_VAR_FLASK_ENV: "test"
+      NOMAD_VAR_APP_NAME: ${{ vars.APP_NAME }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -78,6 +79,7 @@ jobs:
       NOMAD_VAR_REGISTRY_USERNAME: ${{ vars.REGISTRY_USERNAME }}
       NOMAD_VAR_REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       NOMAD_VAR_FLASK_ENV: "production"
+      NOMAD_VAR_APP_NAME: ${{ vars.APP_NAME }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
