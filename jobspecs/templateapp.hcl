@@ -24,15 +24,22 @@ variable "APP_NAME" {
   type        = string
 }
 
+variable "FLASK_ENV" {
+  description = "The environment for Flask"
+  type        = string
+}
+
 job "python-mvc-job" {
   name = "${var.APP_NAME}"
   datacenters = [var.NOMAD_DATACENTER]
   type        = "service"
-
+  namespace   = "default"
+  
   group "main" {
     count = 1
 
     network {
+      mode = "bridge"
       port "http" {
         to = 5000
       }
@@ -51,7 +58,7 @@ job "python-mvc-job" {
       }
 
       env {
-        FLASK_ENV=test
+        FLASK_ENV="${var.FLASK_ENV}"
       }
 
       service {
@@ -65,6 +72,7 @@ job "python-mvc-job" {
           path     = "/health"
           interval = "10s"
           timeout  = "2s"
+          port     = "http"
         }
       }
     }
