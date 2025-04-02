@@ -9,3 +9,7 @@ bp = Blueprint('app', __name__)
 def index():
     return render_template('app/index.html')
 
+@bp.route('/health')
+def health():
+    return "OK", 200
+
